@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UdyogMitra • AI Job Market &amp; Career Portal by Nallani Jaswanth</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- html2pdf.js CDN for Professional Resume PDF Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- PDF.js CDN for Client-Side Resume Parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    .company-logo-inline {
+      width: 22px; height: 22px; object-fit: contain;
+      display: inline-block; vertical-align: middle; margin-right: 6px;
+      background: #ffffff; border-radius: 4px; padding: 1px; border: 1px solid #e2e8f0;
+    }
+    .cat-pill { cursor: pointer; transition: all .15s; }
+    .cat-pill-active { background: #2563eb !important; color: #fff !important; border-color: #2563eb !important; }
+    .dom-pill-active { background: #7c3aed !important; color: #fff !important; border-color: #7c3aed !important; }
+    .exp-btn-active { background: #2563eb !important; color: #fff !important; border-color: #2563eb !important; }
+    .job-card-hover:hover { border-color: #60a5fa !important; box-shadow: 0 6px 25px rgba(37,99,235,.12); }
+    .page-view { display: none; }
+    .page-view.active { display: block; }
+    .auth-tab-active { border-bottom: 3px solid #2563eb; color: #2563eb; font-weight: 800; }
+
+    /* Times New Roman 12pt ATS Resume Styling */
+    .ats-resume-sheet {
+      font-family: 'Times New Roman', Times, serif !important;
+      font-size: 12pt !important;
+      line-height: 1.35 !important;
+      color: #000000 !important;
+      background-color: #ffffff !important;
+      padding: 36px 40px !important;
+      box-sizing: border-box !important;
+      min-height: 842px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border: 1px solid #d1d5db;
+    }
+    .ats-resume-sheet h1 {
+      font-family: 'Times New Roman', Times, serif !important;
+      font-size: 19pt !important;
+      font-weight: bold !important;
+      text-align: center !important;
+      margin-bottom: 3pt !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.5pt !important;
+      color: #000000 !important;
+    }
+    .ats-resume-sheet .ats-contact-bar {
+      font-family: 'Times New Roman', Times, serif !important;
+      font-size: 11pt !important;
+      text-align: center !important;
+      margin-bottom: 12pt !important;
+      color: #111111 !important;
+    }
+    .ats-resume-sheet h2 {
+      font-family: 'Times New Roman', Times, serif !important;
+      font-size: 12pt !important;
+      font-weight: bold !important;
+      text-transform: uppercase !important;
+      border-bottom: 1.5pt solid #000000 !important;
+      padding-bottom: 2pt !important;
+      margin-top: 10pt !important;
+      margin-bottom: 6pt !important;
+      letter-spacing: 0.5pt !important;
+      color: #000000 !important;
+    }
+    .ats-resume-sheet .ats-item-header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      font-size: 12pt;
+      color: #000000;
+    }
+    .ats-resume-sheet .ats-item-sub {
+      display: flex;
+      justify-content: space-between;
+      font-style: italic;
+      font-size: 11pt;
+      margin-bottom: 2pt;
+      color: #222222;
+    }
+    .ats-resume-sheet p, .ats-resume-sheet li, .ats-resume-sheet div {
+      font-family: 'Times New Roman', Times, serif !important;
+      font-size: 12pt !important;
+      color: #000000 !important;
+    }
+    .ats-resume-sheet ul {
+      margin-left: 18pt;
+      list-style-type: disc;
+      margin-bottom: 4pt;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+  <!-- ============================================================
+       PRE-LOGIN AUTH GATEWAY SCREEN (Shown when visitor is NOT logged in)
+       Developed by Nallani Jaswanth
+  ============================================================ -->
+  <div id="auth-gateway-screen" class="min-h-screen flex flex-col justify-between bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white p-4 sm:p-8">
+    
+    <!-- Gateway Header -->
+    <header class="max-w-7xl mx-auto w-full flex items-center justify-between py-3 border-b border-slate-800/80">
+      <div class="flex items-center space-x-3">
+        <div class="bg-gradient-to-tr from-blue-600 to-indigo-500 p-2.5 rounded-2xl text-white shadow-lg">
+          <i class="fa-solid fa-briefcase text-2xl"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-black text-2xl tracking-tight text-white">Udyog<span class="text-blue-400">Mitra</span></span>
+            <span class="bg-blue-500/20 text-blue-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-blue-400/30">Career Portal</span>
+          </div>
+        </div>
+      </div>
+      <div class="hidden sm:flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full font-semibold">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> 1,400+ Active Roles
+        </span>
+      </div>
+    </header>
+
+    <!-- Gateway Center Content -->
+    <main class="max-w-6xl mx-auto w-full py-8 sm:py-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center flex-1">
+      
+      <!-- Left Column: Value Prop & Trust Features -->
+      <div class="lg:col-span-7 space-y-6">
+        <div class="inline-flex items-center gap-2 bg-blue-500/20 text-blue-300 text-xs font-bold px-4 py-1.5 rounded-full border border-blue-400/30">
+          <i class="fa-solid fa-shield-halved text-emerald-400"></i> Authenticated Candidate Access Only
+        </div>
+        
+        <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+          Your Direct Gateway to <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-emerald-400">1,400+ Verified Careers</span>
+        </h1>
+        
+        <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-xl">
+          Please log in or create a candidate account to enter UdyogMitra. Access official career portals with zero redirection.
+        </p>
+
+
+      </div>
+
+      <!-- Right Column: Sign In / Register Card -->
+      <div class="lg:col-span-5">
+        <div class="bg-white text-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100 relative">
+          
+          <!-- Tabs -->
+          <div class="flex border-b border-slate-200 mb-5">
+            <button type="button" onclick="switchGatewayTab('login')" id="gate-tab-login" class="flex-1 py-2.5 text-center text-sm font-extrabold text-blue-600 border-b-2 border-blue-600">
+              Sign In
+            </button>
+            <button type="button" onclick="switchGatewayTab('register')" id="gate-tab-register" class="flex-1 py-2.5 text-center text-sm font-bold text-slate-400 hover:text-slate-700">
+              Create Account
+            </button>
+          </div>
+
+          <!-- Alert Container -->
+          <div id="gateway-alert" class="hidden mb-4 p-3 rounded-xl text-xs font-semibold flex items-center gap-2"></div>
+
+          <!-- GATEWAY LOGIN FORM -->
+          <form id="gateway-login-form" onsubmit="submitGatewayLogin(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">User ID or Email Address *</label>
+              <div class="flex items-center gap-2 border border-slate-300 rounded-xl px-3.5 py-2.5 focus-within:ring-2 focus-within:ring-blue-500 bg-slate-50/50">
+                <i class="fa-solid fa-user text-slate-400 text-xs"></i>
+                <input type="text" id="gate-login-id" required placeholder="e.g. Rahul@42 or name@example.com" class="w-full text-sm outline-none bg-transparent" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Password *</label>
+              <div class="flex items-center gap-2 border border-slate-300 rounded-xl px-3.5 py-2.5 focus-within:ring-2 focus-within:ring-blue-500 bg-slate-50/50">
+                <i class="fa-solid fa-lock text-slate-400 text-xs"></i>
+                <input type="password" id="gate-login-password" required placeholder="••••••••" class="w-full text-sm outline-none bg-transparent" />
+              </div>
+            </div>
+
+            <button type="submit" id="gate-btn-login" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3.5 rounded-xl shadow-lg transition text-sm flex items-center justify-center gap-2">
+              <i class="fa-solid fa-right-to-bracket"></i> Sign In to UdyogMitra
+            </button>
+
+            <p class="text-[11px] text-center text-slate-500 mt-2">
+              Don't have an account? <a href="javascript:void(0)" onclick="switchGatewayTab('register')" class="text-blue-600 font-bold underline">Create candidate account</a>
+            </p>
+          </form>
+
+          <!-- GATEWAY REGISTER FORM -->
+          <form id="gateway-register-form" onsubmit="submitGatewayRegister(event)" class="space-y-3.5 hidden">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Full Name *</label>
+              <input type="text" id="gate-reg-name" required placeholder="e.g. Rahul Sharma" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50/50" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Email Address *</label>
+              <input type="email" id="gate-reg-email" required placeholder="name@example.com" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50/50" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Mobile Number (Optional)</label>
+              <input type="tel" id="gate-reg-mobile" placeholder="+91 9876543210" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50/50" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Password *</label>
+                <input type="password" id="gate-reg-password" required minlength="6" placeholder="Min 6 chars" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50/50" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Confirm *</label>
+                <input type="password" id="gate-reg-confirm" required minlength="6" placeholder="Re-enter" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50/50" />
+              </div>
+            </div>
+
+            <div class="bg-blue-50/80 border border-blue-200/80 p-2.5 rounded-xl text-[11px] text-blue-900 leading-snug">
+              <i class="fa-solid fa-circle-info text-blue-600 mr-1"></i>
+              Your unique Candidate User ID (e.g. <b>Rahul@42</b>) will be automatically assigned.
+            </div>
+
+            <button type="submit" id="gate-btn-register" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold py-3.5 rounded-xl shadow-lg transition text-sm flex items-center justify-center gap-2 mt-1">
+              <i class="fa-solid fa-user-plus"></i> Create Account &amp; Open Dashboard
+            </button>
+
+            <p class="text-[11px] text-center text-slate-500 mt-2">
+              Already have an account? <a href="javascript:void(0)" onclick="switchGatewayTab('login')" class="text-blue-600 font-bold underline">Sign in directly</a>
+            </p>
+          </form>
+
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Gateway Footer -->
+    <footer class="max-w-7xl mx-auto w-full text-center py-4 border-t border-slate-800/80 text-xs text-slate-500">
+      UdyogMitra Career Platform &copy; 2026. All rights reserved.
+    </footer>
+
+  </div>
+
+<div id="main-app-container" class="min-h-screen flex flex-col hidden">
+
+
+  <!-- ============================================================
+       TOP HEADER & NAVIGATION BAR
+  ============================================================ -->
+  <header class="bg-slate-900 text-white shadow-xl sticky top-0 z-50 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
+      
+      <!-- Brand / Logo -->
+      <a href="#jobs" onclick="navigateToPage('jobs')" class="flex items-center space-x-3 group cursor-pointer">
+        <div class="bg-gradient-to-tr from-blue-600 to-indigo-500 p-2.5 rounded-xl text-white shadow-md group-hover:scale-105 transition">
+          <i class="fa-solid fa-briefcase text-xl"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-extrabold text-xl tracking-tight text-white flex items-center gap-1.5">
+              <span>Udyog</span><span class="text-blue-400">Mitra</span>
+            </h1>
+            <span class="bg-blue-500/20 text-blue-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-blue-400/30">Career Portal</span>
+          </div>
+          <p class="text-[11px] text-slate-400">Developed by <span class="text-blue-300 font-semibold">Nallani Jaswanth</span></p>
+        </div>
+      </a>
+
+      <!-- Page Links (Multi-page routing via hash & tabs) -->
+      <nav class="flex flex-wrap items-center gap-1 sm:gap-1.5 text-xs sm:text-sm font-medium">
+        <button onclick="navigateToPage('jobs')" id="nav-btn-jobs" class="page-nav-btn px-2.5 py-1.5 rounded-lg bg-blue-600 text-white flex items-center gap-1.5 shadow-sm">
+          <i class="fa-solid fa-magnifying-glass"></i> Find Jobs
+        </button>
+        <button onclick="navigateToPage('dashboard')" id="nav-btn-dashboard" class="page-nav-btn px-2.5 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white flex items-center gap-1.5 relative">
+          <i class="fa-solid fa-chart-line text-indigo-400"></i> Dashboard
+          <span id="nav-badge-apps" class="bg-blue-600 text-white text-[10px] font-black px-1.5 py-0.2 rounded-full hidden">0</span>
+        </button>
+        <button onclick="navigateToPage('saved')" id="nav-btn-saved" class="page-nav-btn px-2.5 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white flex items-center gap-1.5">
+          <i class="fa-solid fa-bookmark text-amber-400"></i> Saved Jobs
+          <span id="nav-badge-saved" class="bg-amber-500 text-slate-950 text-[10px] font-black px-1.5 py-0.2 rounded-full hidden">0</span>
+        </button>
+        <button onclick="navigateToPage('resume')" id="nav-btn-resume" class="page-nav-btn px-2.5 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white flex items-center gap-1.5">
+          <i class="fa-solid fa-file-invoice text-emerald-400"></i> AI Resume Analyzer
+        </button>
+        <button onclick="navigateToPage('builder')" id="nav-btn-builder" class="page-nav-btn px-2.5 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white flex items-center gap-1.5">
+          <i class="fa-solid fa-pen-ruler text-pink-400"></i> Resume Builder
+        </button>
+        <button onclick="navigateToPage('freshers')" id="nav-btn-freshers" class="page-nav-btn px-2.5 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white flex items-center gap-1.5">
+          <i class="fa-solid fa-graduation-cap text-amber-400"></i> Fresher Hub
+        </button>
+        <button onclick="navigateToPage('companies')" id="nav-btn-companies" class="page-nav-btn px-2.5 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white flex items-center gap-1.5">
+          <i class="fa-solid fa-building text-blue-400"></i> Companies
+        </button>
+        <button onclick="navigateToPage('register')" id="nav-btn-register" class="page-nav-btn px-2.5 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-500 font-bold flex items-center gap-1.5 shadow-md">
+          <i class="fa-solid fa-bell"></i> Alerts
+        </button>
+        <button onclick="navigateToPage('analytics')" id="nav-btn-analytics" class="page-nav-btn px-2.5 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white flex items-center gap-1.5">
+          <i class="fa-solid fa-chart-pie text-purple-400"></i> Analytics
+        </button>
+      </nav>
+
+      <!-- AUTH STATUS CONTAINER (BEFORE LOGIN: Login / Register, AFTER LOGIN: User Profile + Logout) -->
+      <div id="nav-auth-container" class="flex items-center gap-2">
+        <!-- Guest View -->
+        <div id="nav-guest-view" class="flex items-center gap-2">
+          <button onclick="openAuthModal('login')" class="text-xs font-bold text-slate-200 hover:text-white bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-xl border border-slate-700 transition flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-right-to-bracket text-blue-400"></i> Login
+          </button>
+          <button onclick="openAuthModal('register')" class="text-xs font-black text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 px-3 py-1.5 rounded-xl shadow transition flex items-center gap-1.5">
+            <i class="fa-solid fa-user-plus"></i> Register
+          </button>
+        </div>
+
+        <!-- Logged-in View -->
+        <div id="nav-user-view" class="hidden flex items-center gap-2">
+          <button onclick="navigateToPage('dashboard')" class="flex items-center gap-2 bg-slate-800/90 border border-slate-700 px-3 py-1.5 rounded-xl hover:border-blue-500 transition cursor-pointer">
+            <div class="w-6 h-6 rounded-full bg-blue-600 text-white font-black text-[11px] flex items-center justify-center" id="nav-user-avatar">
+              U
+            </div>
+            <span class="text-xs font-bold text-white max-w-[110px] truncate" id="nav-user-name">User</span>
+          </button>
+          <button onclick="handleUserLogout()" title="Log out" class="text-xs font-semibold text-rose-400 hover:text-rose-300 bg-rose-950/40 hover:bg-rose-900/60 p-2 rounded-xl border border-rose-800/40 transition">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Notification Banner for Global User Activity -->
+  <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white text-xs py-2 px-4 border-b border-indigo-800/60 shadow-inner">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span class="font-bold text-emerald-300">Live UdyogMitra Activity:</span>
+        <span class="text-slate-300">Candidates actively applying to Google, TCS, Infosys, Amazon, Swiggy, and 20+ top employers.</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="text-slate-300">Active Job Seekers: <b class="text-white font-extrabold" id="topbar-users-count">3,895</b></span>
+        <span class="text-slate-300">Total Applications: <b class="text-emerald-400 font-extrabold" id="topbar-apps-count">12,450+</b></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Container -->
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full space-y-6">
+
+    <!-- ============================================================
+         PAGE 1: JOBS & HOME SEARCH PAGE
+    ============================================================ -->
+    <section id="page-jobs" class="page-view active space-y-6">
+
+      <!-- Hero Banner with UdyogMitra Branding -->
+      <div class="bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-900 rounded-3xl p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden border border-slate-700/50">
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+          <div class="max-w-3xl space-y-3">
+            <div class="inline-flex items-center gap-2 bg-blue-500/20 text-blue-200 text-xs font-semibold px-3.5 py-1.5 rounded-full border border-blue-400/30">
+              <i class="fa-solid fa-sparkles text-amber-300"></i> Welcome to UdyogMitra • Powered by AI &amp; Direct Career Portals
+            </div>
+            <h2 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+              Direct Application Portal &amp; Smart Career Hub
+            </h2>
+            <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+              Developed by <b class="text-white">Nallani Jaswanth</b>. When you click <b class="text-emerald-400">Apply on Company</b>, UdyogMitra takes you straight to the employer's official career page without deviation. Securely log in to track your personal job applications, bookmark saved jobs, and build your resume.
+            </p>
+            <div class="flex flex-wrap gap-3 pt-2">
+              <button onclick="navigateToPage('resume')" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold px-5 py-2.5 rounded-xl shadow-lg transition text-sm flex items-center gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> AI Resume Analyzer
+              </button>
+              <button onclick="navigateToPage('dashboard')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 font-bold px-4 py-2.5 rounded-xl shadow transition text-sm flex items-center gap-2">
+                <i class="fa-solid fa-chart-line text-indigo-400"></i> My Applications Dashboard
+              </button>
+              <button onclick="navigateToPage('builder')" class="bg-slate-800 hover:bg-slate-700 text-pink-300 border border-slate-600 font-bold px-4 py-2.5 rounded-xl shadow transition text-sm flex items-center gap-2">
+                <i class="fa-solid fa-pen-ruler"></i> Resume Builder
+              </button>
+            </div>
+          </div>
+
+          <!-- Dedicated Metrics -->
+          <div class="bg-slate-800/80 backdrop-blur-sm border border-slate-700 p-5 rounded-2xl shadow-xl w-full lg:w-72 shrink-0 space-y-4">
+            <div class="border-b border-slate-700/80 pb-3">
+              <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Live Registered Job Seekers</span>
+              <div class="text-3xl font-black text-emerald-400 mt-0.5 flex items-baseline gap-2">
+                <span id="metric-registered-users">3,895</span>
+                <span class="text-xs font-semibold text-slate-300">Candidates</span>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-0.5">Actively registered on UdyogMitra</p>
+            </div>
+
+            <div class="border-b border-slate-700/80 pb-3">
+              <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Applications Submitted</span>
+              <div class="text-3xl font-black text-blue-400 mt-0.5 flex items-baseline gap-2">
+                <span id="metric-total-applications">12,450+</span>
+                <span class="text-xs font-semibold text-slate-300">Sent</span>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-0.5">Directly applied via career portals</p>
+            </div>
+
+            <div>
+              <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Total Active Jobs</span>
+              <div class="text-2xl font-black text-amber-400 mt-0.5" id="metric-active-jobs">1,400 Roles</div>
+              <p class="text-[10px] text-slate-400 mt-0.5">Product, Service &amp; Startups</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEPARATE DEDICATED USERS & CANDIDATES STATS SECTION -->
+      <div class="bg-gradient-to-r from-blue-900/10 via-indigo-900/10 to-slate-900/10 border border-blue-200/60 rounded-3xl p-6 sm:p-7 shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5 border-b border-slate-200/80 pb-4">
+          <div>
+            <span class="inline-flex items-center gap-1.5 bg-blue-100 text-blue-800 text-xs font-extrabold px-3 py-1 rounded-full border border-blue-200 mb-1">
+              <i class="fa-solid fa-users text-blue-600"></i> Community Engagement
+            </span>
+            <h3 class="text-2xl font-black text-slate-900">UdyogMitra User Application Counter</h3>
+            <p class="text-xs sm:text-sm text-slate-600 mt-0.5">
+              Live statistics tracking candidate registrations, resume parsing sessions, and direct employer application clicks.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="openAuthModal('register')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition">
+              + Register as New Candidate
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm text-center">
+            <div class="w-10 h-10 mx-auto rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg mb-2">
+              <i class="fa-solid fa-user-plus"></i>
+            </div>
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Registered Job Seekers</div>
+            <div class="text-2xl sm:text-3xl font-black text-slate-900 mt-1" id="stat-registered-users">3,895</div>
+            <div class="text-[11px] text-emerald-600 font-bold mt-1">↑ +48 joined today</div>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm text-center">
+            <div class="w-10 h-10 mx-auto rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg mb-2">
+              <i class="fa-solid fa-paper-plane"></i>
+            </div>
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Jobs Applied Today</div>
+            <div class="text-2xl sm:text-3xl font-black text-emerald-700 mt-1" id="stat-today-apps">184</div>
+            <div class="text-[11px] text-slate-500 font-medium mt-1">Direct company clicks</div>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm text-center">
+            <div class="w-10 h-10 mx-auto rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg mb-2">
+              <i class="fa-solid fa-file-lines"></i>
+            </div>
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Resumes Analyzed</div>
+            <div class="text-2xl sm:text-3xl font-black text-purple-700 mt-1" id="stat-resumes-parsed">4,121</div>
+            <div class="text-[11px] text-slate-500 font-medium mt-1">AI match rate: 87%</div>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm text-center">
+            <div class="w-10 h-10 mx-auto rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg mb-2">
+              <i class="fa-solid fa-building-circle-check"></i>
+            </div>
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Employer Portals</div>
+            <div class="text-2xl sm:text-3xl font-black text-amber-600 mt-1">26 Brands</div>
+            <div class="text-[11px] text-slate-500 font-medium mt-1">Verified career gateways</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick QR Code Banner -->
+      <div class="bg-gradient-to-r from-indigo-900 via-slate-900 to-blue-950 rounded-3xl p-6 sm:p-8 text-white border border-indigo-700/50 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="space-y-2 max-w-xl">
+          <div class="inline-flex items-center gap-1.5 bg-indigo-500/30 text-indigo-200 text-xs font-bold px-3 py-1 rounded-full border border-indigo-400/30">
+            <i class="fa-solid fa-qrcode"></i> Instant Mobile Access &amp; Apply
+          </div>
+          <h3 class="text-2xl font-black">Scan QR Code to Open UdyogMitra on Your Phone</h3>
+          <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+            Scan using any mobile device or Google Lens to immediately register for free email job alerts and apply on official career portals on the go.
+          </p>
+          <div class="pt-2">
+            <button onclick="navigateToPage('register')" class="bg-white text-slate-900 font-bold text-xs px-5 py-2.5 rounded-xl hover:bg-slate-100 transition shadow">
+              Open Registration Form ➔
+            </button>
+          </div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl shadow-2xl flex flex-col items-center shrink-0 border-4 border-indigo-400">
+          <img id="qr-code-img" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://ai-job-market-analytics.netlify.app&color=0f172a" alt="QR Code" class="w-32 h-32 object-contain rounded-lg" />
+          <span class="text-[10px] font-black text-slate-700 uppercase tracking-wider mt-2">📱 Scan with Camera</span>
+        </div>
+      </div>
+
+      <!-- SEARCH & BROWSE JOBS SECTION -->
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+          <div>
+            <h2 class="text-2xl font-black text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-briefcase text-blue-600"></i> Explore 1,400+ Verified Job Openings
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">
+              Every job card features complete descriptions and required skills. Click <b class="text-blue-600">Apply on Company</b> to immediately open the official employer portal. Bookmark jobs to your private <b class="text-amber-600">Saved Jobs</b> list.
+            </p>
+          </div>
+          <span class="text-xs text-slate-600 bg-slate-100 px-3.5 py-1.5 rounded-full font-bold self-start sm:self-center" id="jobs-result-count">Showing 10 jobs</span>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
+          <div class="sm:col-span-6 flex items-center gap-2 border border-slate-300 rounded-xl px-3.5 py-2.5 bg-slate-50 focus-within:ring-2 focus-within:ring-blue-500">
+            <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+            <input type="text" id="search-keyword" placeholder="Job title, key skills (e.g. Java, Python, .NET, HR), or company..."
+              class="flex-1 text-sm outline-none bg-transparent text-slate-800 placeholder-slate-400"
+              oninput="filterAndRenderJobs()" />
+          </div>
+          <div class="sm:col-span-3 flex items-center gap-2 border border-slate-300 rounded-xl px-3.5 py-2.5 bg-slate-50">
+            <i class="fa-solid fa-map-marker-alt text-slate-400 text-sm"></i>
+            <select id="search-location" class="text-sm outline-none bg-transparent text-slate-700 cursor-pointer w-full" onchange="filterAndRenderJobs()">
+              <option value="">All Locations in India</option>
+              <option>Bangalore</option>
+              <option>Hyderabad</option>
+              <option>Pune</option>
+              <option>Gurgaon</option>
+              <option>Mumbai</option>
+              <option>Chennai</option>
+              <option>Noida</option>
+              <option>Kolkata</option>
+              <option>Remote</option>
+            </select>
+          </div>
+          <div class="sm:col-span-3 flex items-center gap-2">
+            <button onclick="filterAndRenderJobs()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition shadow flex items-center justify-center gap-2">
+              <i class="fa-solid fa-filter"></i> Apply Filters
+            </button>
+          </div>
+        </div>
+
+        <!-- Company Category Filters (Product, Service, Startup) -->
+        <div>
+          <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Filter by Company Type</div>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="setCategoryFilter('ALL', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-slate-300 bg-slate-800 text-white cat-pill-active" data-cat="ALL">
+              All Companies (26)
+            </button>
+            <button onclick="setCategoryFilter('Product-Based', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-blue-300 bg-blue-50 text-blue-800" data-cat="Product-Based">
+              🏢 Product-Based (Google, Microsoft, Amazon, Adobe...)
+            </button>
+            <button onclick="setCategoryFilter('Service-Based', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-emerald-300 bg-emerald-50 text-emerald-800" data-cat="Service-Based">
+              💼 Service-Based (TCS, Infosys, Wipro, Accenture...)
+            </button>
+            <button onclick="setCategoryFilter('Startup', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-amber-300 bg-amber-50 text-amber-800" data-cat="Startup">
+              🚀 Startups &amp; Unicorns (Swiggy, Zomato, PhonePe, CRED...)
+            </button>
+          </div>
+        </div>
+
+        <!-- Domain Filters -->
+        <div>
+          <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Filter by Technical &amp; Business Domain</div>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="setDomainFilter('ALL', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-slate-300 bg-slate-800 text-white dom-pill-active" data-dom="ALL">
+              All Domains
+            </button>
+            <button onclick="setDomainFilter('Java', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-orange-300 bg-orange-50 text-orange-800" data-dom="Java">
+              ☕ Java &amp; Spring Boot
+            </button>
+            <button onclick="setDomainFilter('.NET', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-purple-300 bg-purple-50 text-purple-800" data-dom=".NET">
+              .NET &amp; C#
+            </button>
+            <button onclick="setDomainFilter('Python', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-blue-300 bg-blue-50 text-blue-800" data-dom="Python">
+              🐍 Python &amp; Data Science
+            </button>
+            <button onclick="setDomainFilter('Web', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-teal-300 bg-teal-50 text-teal-800" data-dom="Web">
+              🌐 Web &amp; Cloud (React, AWS, DevOps)
+            </button>
+            <button onclick="setDomainFilter('Non-IT', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-rose-300 bg-rose-50 text-rose-800" data-dom="Non-IT">
+              👔 Non-IT (HR, Finance, Operations, Sales)
+            </button>
+          </div>
+        </div>
+
+        <!-- Experience Level Filter -->
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="text-xs font-bold text-slate-600 uppercase tracking-wider">Select Experience:</span>
+          <select id="search-exp" onchange="filterAndRenderJobs()"
+            class="border border-slate-300 rounded-xl px-3.5 py-2 text-xs sm:text-sm bg-slate-50 font-semibold text-slate-800 outline-none cursor-pointer">
+            <option value="ALL">All Experience Tiers</option>
+            <option value="0">🎓 Fresher (0 Years Only)</option>
+            <option value="1">💼 1 Year Experience</option>
+            <option value="2">💼 2 Years Experience</option>
+            <option value="3">💼 3 Years Experience</option>
+            <option value="4">🚀 4+ Years Experience</option>
+          </select>
+        </div>
+
+        <!-- Jobs Grid Container with Full Job Descriptions, Required Skills and Bookmark button -->
+        <div id="jobs-grid" class="space-y-4 pt-2"></div>
+
+        <!-- Load More Pagination -->
+        <div class="text-center pt-3">
+          <button onclick="loadMoreJobs()" id="load-more-btn"
+            class="border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm px-8 py-3 rounded-xl shadow-sm transition hidden">
+            Load More Jobs ➔
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         PAGE 2: PERSONALIZED USER DASHBOARD (Protected & Isolated)
+    ============================================================ -->
+    <section id="page-dashboard" class="page-view space-y-6">
+      
+      <!-- User Profile Header Overview -->
+      <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl border border-slate-700/60">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 text-white font-black text-2xl flex items-center justify-center shadow-lg" id="dash-user-avatar">
+              U
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-2xl font-black" id="dash-profile-name">User Account</h2>
+                <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-400/30">Verified Candidate</span>
+              </div>
+              <p class="text-xs text-slate-300 mt-0.5" id="dash-profile-email">user@example.com</p>
+              <p class="text-[11px] text-slate-400 mt-0.5">User ID: <span class="font-mono text-blue-300" id="dash-profile-id">USR_0000</span></p>
+            </div>
+          </div>
+
+          <!-- Profile Completion Percentage Widget -->
+          <div class="bg-slate-850/80 bg-slate-800/80 p-4 rounded-2xl border border-slate-700 w-full sm:w-64">
+            <div class="flex justify-between text-xs font-bold mb-1.5">
+              <span class="text-slate-300">Profile Completion</span>
+              <span class="text-emerald-400 font-extrabold" id="dash-profile-percentage">85%</span>
+            </div>
+            <div class="w-full bg-slate-700 rounded-full h-2.5 overflow-hidden">
+              <div class="bg-gradient-to-r from-blue-500 to-emerald-400 h-2.5 rounded-full transition-all duration-500" id="dash-profile-progress-bar" style="width: 85%"></div>
+            </div>
+            <p class="text-[10px] text-slate-400 mt-1.5">Add resume &amp; apply to jobs to reach 100%</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Personalized Statistics Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Total Applied</span>
+          <div class="text-2xl font-black text-blue-700 mt-1" id="stat-user-applied">0</div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Saved Jobs</span>
+          <div class="text-2xl font-black text-amber-600 mt-1" id="stat-user-saved">0</div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Shortlisted</span>
+          <div class="text-2xl font-black text-indigo-600 mt-1" id="stat-user-shortlisted">0</div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Interviews</span>
+          <div class="text-2xl font-black text-emerald-600 mt-1" id="stat-user-interviews">0</div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Resume Score</span>
+          <div class="text-2xl font-black text-purple-600 mt-1" id="stat-user-resumescore">85</div>
+        </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Profile Health</span>
+          <div class="text-2xl font-black text-teal-600 mt-1" id="stat-user-health">Good</div>
+        </div>
+      </div>
+
+      <!-- Applied Jobs Section -->
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+          <div>
+            <h3 class="text-xl font-black text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-clock-rotate-left text-blue-600"></i> My Applied Jobs
+            </h3>
+            <p class="text-xs text-slate-500 mt-0.5">Real-time status tracking for roles you submitted on official employer career gateways.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="navigateToPage('jobs')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition">
+              + Browse More Jobs
+            </button>
+          </div>
+        </div>
+
+        <div id="applied-jobs-list" class="space-y-3.5"></div>
+      </div>
+
+      <!-- Quick Shortcuts Row -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Saved Jobs Card -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-3 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <h4 class="font-black text-slate-900 text-base flex items-center gap-2">
+                <i class="fa-solid fa-bookmark text-amber-500"></i> Bookmarked Jobs (<span id="dash-saved-quick-count">0</span>)
+              </h4>
+              <button onclick="navigateToPage('saved')" class="text-xs text-blue-600 font-bold hover:underline">View All ➔</button>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">Review saved openings you plan to apply for later.</p>
+          </div>
+          <div id="dash-saved-quick-preview" class="space-y-2 pt-2"></div>
+        </div>
+
+        <!-- Resume Management Card -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-3 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <h4 class="font-black text-slate-900 text-base flex items-center gap-2">
+                <i class="fa-solid fa-file-invoice text-emerald-500"></i> Resume Management
+              </h4>
+              <span class="text-xs font-extrabold bg-purple-100 text-purple-800 px-2.5 py-0.5 rounded-full" id="dash-resume-score-badge">Score: 85/100</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">Active file: <b class="text-slate-800" id="dash-active-resume-file">No resume uploaded yet</b></p>
+          </div>
+          <div class="flex flex-wrap gap-2 pt-2">
+            <button onclick="navigateToPage('resume')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold px-4 py-2 rounded-xl border border-slate-200 transition">
+              <i class="fa-solid fa-upload mr-1 text-blue-600"></i> Upload / Score Check
+            </button>
+            <button onclick="navigateToPage('builder')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition">
+              <i class="fa-solid fa-pen-ruler mr-1"></i> Edit Resume Builder
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         PAGE 3: SAVED JOBS (BOOKMARKS)
+    ============================================================ -->
+    <section id="page-saved" class="page-view space-y-6">
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+          <div>
+            <span class="inline-flex items-center gap-1.5 bg-amber-100 text-amber-800 text-xs font-extrabold px-3 py-1 rounded-full border border-amber-200 mb-1">
+              <i class="fa-solid fa-bookmark"></i> Candidate Bookmarks
+            </span>
+            <h2 class="text-2xl font-black text-slate-900">Saved Jobs</h2>
+            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+              Review and apply directly to your bookmarked positions from Product-Based, Service-Based, and Startup companies.
+            </p>
+          </div>
+          <button onclick="navigateToPage('jobs')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition">
+            + Explore More Openings
+          </button>
+        </div>
+
+        <div id="saved-jobs-container" class="space-y-3.5"></div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         PAGE 4: AI RESUME ANALYZER & SCORE CHECKER
+    ============================================================ -->
+    <section id="page-resume" class="page-view space-y-6">
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+        <div>
+          <div class="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 text-xs font-extrabold px-3 py-1 rounded-full mb-1">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Client-Side AI Parser &amp; Score Checker
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900">AI Resume Analyzer &amp; Skill Gap Matcher</h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            Upload your PDF resume. UdyogMitra analyzes technical and domain skills, computes match scores, saves results to your account, and provides direct links to apply for matching openings.
+          </p>
+        </div>
+
+        <!-- Step 1: Experience Selector -->
+        <div class="bg-blue-50/70 border border-blue-200 p-5 rounded-2xl">
+          <label class="block text-xs font-bold text-blue-900 uppercase tracking-wider mb-2.5">
+            <i class="fa-solid fa-user-graduate mr-1 text-blue-600"></i> Step 1: Select Your Current Experience Level
+          </label>
+          <div class="flex flex-wrap gap-2" id="resume-exp-buttons">
+            <button type="button" onclick="setResumeExperience('ALL', this)" class="resume-exp-btn px-4 py-2.5 rounded-xl text-xs font-bold border transition exp-btn-active">All Levels</button>
+            <button type="button" onclick="setResumeExperience('0', this)" class="resume-exp-btn px-4 py-2.5 rounded-xl text-xs font-bold border bg-white text-slate-700 border-slate-300 hover:bg-slate-100 transition">🎓 Fresher (0 Yrs)</button>
+            <button type="button" onclick="setResumeExperience('1', this)" class="resume-exp-btn px-4 py-2.5 rounded-xl text-xs font-bold border bg-white text-slate-700 border-slate-300 hover:bg-slate-100 transition">💼 1 Year</button>
+            <button type="button" onclick="setResumeExperience('2', this)" class="resume-exp-btn px-4 py-2.5 rounded-xl text-xs font-bold border bg-white text-slate-700 border-slate-300 hover:bg-slate-100 transition">💼 2 Years</button>
+            <button type="button" onclick="setResumeExperience('3', this)" class="resume-exp-btn px-4 py-2.5 rounded-xl text-xs font-bold border bg-white text-slate-700 border-slate-300 hover:bg-slate-100 transition">💼 3 Years</button>
+            <button type="button" onclick="setResumeExperience('4', this)" class="resume-exp-btn px-4 py-2.5 rounded-xl text-xs font-bold border bg-white text-slate-700 border-slate-300 hover:bg-slate-100 transition">🚀 4+ Years</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Upload Resume Box -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+            <i class="fa-solid fa-file-arrow-up mr-1 text-blue-600"></i> Step 2: Upload Your Resume (PDF)
+          </label>
+          <div class="border-2 border-dashed border-blue-300 rounded-3xl p-8 sm:p-12 text-center bg-blue-50/20 hover:bg-blue-50/50 transition cursor-pointer"
+            onclick="document.getElementById('resume-file').click()">
+            <div class="w-16 h-16 mx-auto mb-3 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 text-3xl shadow-sm">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+            </div>
+            <p class="font-extrabold text-slate-800 text-base">Click to choose or drag &amp; drop your Resume (PDF)</p>
+            <p class="text-xs text-slate-500 mt-1">Automatic extraction of Java, Python, .NET, SQL, React, AWS, HR, Finance skills</p>
+            <input type="file" id="resume-file" accept="application/pdf" class="hidden" onchange="handleResumeUpload(event)" />
+          </div>
+        </div>
+
+        <!-- Resume Analysis Output -->
+        <div id="resume-extracted-box" class="hidden bg-slate-50/70 p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5">
+          <div class="flex flex-wrap justify-between items-center gap-3 border-b border-slate-200/80 pb-3">
+            <div>
+              <h3 class="font-black text-slate-900 text-lg flex items-center gap-2">
+                <i class="fa-solid fa-circle-check text-emerald-600"></i> Extracted Candidate Skills &amp; Profile
+              </h3>
+              <p class="text-xs text-slate-500 mt-0.5">Filtered for: <b class="text-blue-700" id="resume-applied-exp-label">All Experience Levels</b></p>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-xs bg-emerald-100 text-emerald-800 px-3.5 py-1.5 rounded-full font-black" id="resume-skill-count">0 Skills Found</span>
+              <button type="button" onclick="openResumeInBuilder()" class="bg-gradient-to-r from-pink-600 to-indigo-600 hover:from-pink-500 hover:to-indigo-500 text-white font-extrabold text-xs px-4 py-2 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fa-solid fa-pen-to-square"></i> Edit Resume Builder
+              </button>
+            </div>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-slate-600 mb-2">Detected Skills from Resume:</div>
+            <div class="flex flex-wrap gap-2" id="resume-skill-badges"></div>
+          </div>
+          <div class="pt-2">
+            <h4 class="font-black text-slate-800 text-base mb-3 flex items-center gap-2">
+              <i class="fa-solid fa-briefcase text-blue-600"></i> Top Matching Openings for Your Resume:
+            </h4>
+            <div id="resume-matched-jobs-list" class="space-y-4"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         PAGE 5: PERSONALIZED RESUME BUILDER
+    ============================================================ -->
+        <!-- ============================================================
+         PAGE 5: PERSONALIZED 8-SECTION ATS RESUME BUILDER
+         Strict Times New Roman, 12pt Standard Formatting
+    ============================================================ -->
+    <section id="page-builder" class="page-view space-y-6">
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+        
+        <!-- Header & Action Bar -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200/80 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 bg-pink-100 text-pink-800 text-xs font-extrabold px-3 py-1 rounded-full border border-pink-200">
+                <i class="fa-solid fa-pen-ruler"></i> Interactive Career Tool
+              </span>
+              <span class="inline-flex items-center gap-1 bg-amber-100 text-amber-900 text-xs font-bold px-2.5 py-0.5 rounded-full border border-amber-200">
+                <i class="fa-solid fa-font"></i> Times New Roman • 12pt ATS Compliant
+              </span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">UdyogMitra ATS Resume Builder</h2>
+            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+              Edit all 8 comprehensive sections. Changes reflect instantly in the Times New Roman 12pt live preview. Export your personal standalone PDF ready for employer applications.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2 flex-wrap">
+            <button type="button" onclick="saveResumeBuilderData(true)" class="bg-blue-600 hover:bg-blue-700 text-white font-black text-xs px-4 py-2.5 rounded-xl shadow transition flex items-center gap-1.5">
+              <i class="fa-solid fa-floppy-disk"></i> Save Resume
+            </button>
+            <button type="button" id="btn-download-resume-pdf" onclick="downloadResumeAsPDF()" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs px-4 py-2.5 rounded-xl shadow-lg transition flex items-center gap-1.5">
+              <i class="fa-solid fa-file-arrow-down"></i> Download Resume as PDF
+            </button>
+            <button type="button" onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-3 py-2.5 rounded-xl transition flex items-center gap-1.5">
+              <i class="fa-solid fa-print"></i> Print
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- LEFT COLUMN: 8-SECTION INTERACTIVE EDITOR FORM -->
+          <div class="lg:col-span-6 space-y-6 bg-slate-50/80 p-5 sm:p-6 rounded-2xl border border-slate-200 max-h-[850px] overflow-y-auto pr-3">
+            
+            <!-- SECTION 1: Personal Information -->
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+              <h3 class="font-extrabold text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2 text-blue-700">
+                <i class="fa-solid fa-user"></i> 1. Personal Information
+              </h3>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Full Name *</label>
+                  <input type="text" id="builder-name" placeholder="e.g. Rahul Sharma" class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500" oninput="handleBuilderInputChange()" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Target Professional Role / Title</label>
+                  <input type="text" id="builder-role" placeholder="e.g. Senior Java Software Engineer" class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500" oninput="handleBuilderInputChange()" />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Email Address *</label>
+                  <input type="email" id="builder-email" placeholder="rahul@example.com" class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500" oninput="handleBuilderInputChange()" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Phone Number *</label>
+                  <input type="text" id="builder-phone" placeholder="+91 9876543210" class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500" oninput="handleBuilderInputChange()" />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">City / Location</label>
+                  <input type="text" id="builder-location" placeholder="Bangalore, India" class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500" oninput="handleBuilderInputChange()" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">LinkedIn Profile</label>
+                  <input type="text" id="builder-linkedin" placeholder="linkedin.com/in/username" class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500" oninput="handleBuilderInputChange()" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">GitHub / Portfolio</label>
+                  <input type="text" id="builder-portfolio" placeholder="github.com/username" class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500" oninput="handleBuilderInputChange()" />
+                </div>
+              </div>
+            </div>
+
+            <!-- SECTION 2: Professional Summary -->
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
+              <h3 class="font-extrabold text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2 text-blue-700">
+                <i class="fa-solid fa-align-left"></i> 2. Professional Summary
+              </h3>
+              <textarea id="builder-summary" rows="3" placeholder="Dynamic software professional with experience designing scalable applications, optimizing database performance, and collaborating in Agile teams..." class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500" oninput="handleBuilderInputChange()"></textarea>
+            </div>
+
+            <!-- SECTION 3: Education -->
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="font-extrabold text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2 text-blue-700">
+                  <i class="fa-solid fa-graduation-cap"></i> 3. Education
+                </h3>
+                <button type="button" onclick="addEducationEntry()" class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
+                  <i class="fa-solid fa-plus text-[10px]"></i> Add Education
+                </button>
+              </div>
+              <div id="builder-education-container" class="space-y-3"></div>
+            </div>
+
+            <!-- SECTION 4: Skills -->
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+              <h3 class="font-extrabold text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2 text-blue-700">
+                <i class="fa-solid fa-code"></i> 4. Skills &amp; Technical Competencies
+              </h3>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Technical Skills &amp; Languages (comma separated)</label>
+                <input type="text" id="builder-skills-tech" placeholder="e.g. Java, Python, C#, Spring Boot, React, SQL, PostgreSQL" class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500" oninput="handleBuilderInputChange()" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Domain Expertise &amp; Methodologies</label>
+                <input type="text" id="builder-skills-domain" placeholder="e.g. Cloud Computing, Microservices, REST APIs, Agile / Scrum, CI/CD" class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500" oninput="handleBuilderInputChange()" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Tools, Databases &amp; Platforms</label>
+                <input type="text" id="builder-skills-tools" placeholder="e.g. Git, Docker, Kubernetes, AWS, JIRA, Maven, VS Code" class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500" oninput="handleBuilderInputChange()" />
+              </div>
+            </div>
+
+            <!-- SECTION 5: Work Experience -->
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="font-extrabold text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2 text-blue-700">
+                  <i class="fa-solid fa-briefcase"></i> 5. Work Experience
+                </h3>
+                <button type="button" onclick="addExperienceEntry()" class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
+                  <i class="fa-solid fa-plus text-[10px]"></i> Add Experience
+                </button>
+              </div>
+              <div id="builder-experience-container" class="space-y-3"></div>
+            </div>
+
+            <!-- SECTION 6: Projects -->
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="font-extrabold text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2 text-blue-700">
+                  <i class="fa-solid fa-diagram-project"></i> 6. Projects
+                </h3>
+                <button type="button" onclick="addProjectEntry()" class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
+                  <i class="fa-solid fa-plus text-[10px]"></i> Add Project
+                </button>
+              </div>
+              <div id="builder-projects-container" class="space-y-3"></div>
+            </div>
+
+            <!-- SECTION 7: Certifications -->
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="font-extrabold text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2 text-blue-700">
+                  <i class="fa-solid fa-award"></i> 7. Certifications
+                </h3>
+                <button type="button" onclick="addCertificationEntry()" class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
+                  <i class="fa-solid fa-plus text-[10px]"></i> Add Certification
+                </button>
+              </div>
+              <div id="builder-certifications-container" class="space-y-3"></div>
+            </div>
+
+            <!-- SECTION 8: Achievements & Awards -->
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="font-extrabold text-slate-900 text-sm uppercase tracking-wider flex items-center gap-2 text-blue-700">
+                  <i class="fa-solid fa-trophy"></i> 8. Key Achievements &amp; Awards
+                </h3>
+                <button type="button" onclick="addAchievementEntry()" class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1">
+                  <i class="fa-solid fa-plus text-[10px]"></i> Add Achievement
+                </button>
+              </div>
+              <div id="builder-achievements-container" class="space-y-3"></div>
+            </div>
+
+            <div class="pt-2">
+              <button type="button" onclick="saveResumeBuilderData(true)" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-3.5 rounded-xl shadow-lg transition text-sm flex items-center justify-center gap-2">
+                <i class="fa-solid fa-floppy-disk"></i> Save Complete Resume to Account
+              </button>
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN: STRICT TIMES NEW ROMAN 12PT LIVE ATS RESUME PREVIEW -->
+          <div class="lg:col-span-6 flex flex-col space-y-3">
+            <div class="flex items-center justify-between text-xs text-slate-500 px-1">
+              <span class="font-bold flex items-center gap-1.5 text-slate-700">
+                <i class="fa-solid fa-eye text-blue-600"></i> Live ATS Document Preview (Times New Roman • 12pt)
+              </span>
+              <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded font-mono text-[10px]">PDF Render Target</span>
+            </div>
+
+            <!-- Target sheet container that html2pdf exports -->
+            <div class="bg-slate-100 p-2 sm:p-4 rounded-2xl border border-slate-200 overflow-x-auto">
+              <div id="resume-sheet-preview" class="ats-resume-sheet mx-auto max-w-[800px]">
+                <!-- Document will be dynamically generated by updateResumePreview() -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         PAGE 6: FRESHER HUB
+    ============================================================ -->
+    <section id="page-freshers" class="page-view space-y-6">
+      <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
+          <div>
+            <div class="inline-block bg-amber-100 text-amber-900 text-xs font-bold px-3 py-1 rounded-full mb-1">
+              🎓 0–1 Year Experience · Fresh Graduates Hub
+            </div>
+            <h2 class="text-2xl font-black text-slate-900">Fresher &amp; Entry-Level Job Openings</h2>
+            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+              Verified entry-level roles requiring 0 to 1 year of experience. Includes full job descriptions and direct career portal links.
+            </p>
+          </div>
+          <button onclick="navigateToPage('register')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow transition">
+            🔔 Subscribe to Fresher Alerts
+          </button>
+        </div>
+
+        <!-- Domain Filters for Freshers -->
+        <div class="flex flex-wrap gap-2">
+          <button onclick="setFresherDomain('ALL', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-slate-300 bg-slate-800 text-white cat-pill-active">
+            All Domains
+          </button>
+          <button onclick="setFresherDomain('Java', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-orange-300 bg-orange-50 text-orange-800">
+            ☕ Java &amp; Backend
+          </button>
+          <button onclick="setFresherDomain('.NET', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-purple-300 bg-purple-50 text-purple-800">
+            .NET &amp; C#
+          </button>
+          <button onclick="setFresherDomain('Python', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-blue-300 bg-blue-50 text-blue-800">
+            🐍 Python &amp; Data
+          </button>
+          <button onclick="setFresherDomain('Web', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-teal-300 bg-teal-50 text-teal-800">
+            🌐 Web &amp; Cloud
+          </button>
+          <button onclick="setFresherDomain('Non-IT', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-rose-300 bg-rose-50 text-rose-800">
+            👔 Non-IT Roles
+          </button>
+        </div>
+
+        <!-- Fresher Jobs Container -->
+        <div id="fresher-jobs-grid" class="space-y-4"></div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         PAGE 7: COMPANIES & OFFICIAL CAREER PORTALS
+    ============================================================ -->
+    <section id="page-companies" class="page-view space-y-6">
+      <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+        <div>
+          <h2 class="text-2xl font-black text-slate-900 mb-1">🏢 Actively Hiring Companies &amp; Verified Career Portals</h2>
+          <p class="text-xs sm:text-sm text-slate-500">
+            Direct gateways to official career portals. Click any company's "Career Portal" button to open their original hiring page directly.
+          </p>
+        </div>
+
+        <!-- Category Filter Tabs -->
+        <div class="flex flex-wrap gap-2">
+          <button onclick="filterCompanies('ALL', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-slate-300 bg-slate-800 text-white cat-pill-active" data-compcat="ALL">
+            All Companies (26)
+          </button>
+          <button onclick="filterCompanies('Product-Based', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-blue-300 bg-blue-50 text-blue-800" data-compcat="Product-Based">
+            🏢 Product-Based
+          </button>
+          <button onclick="filterCompanies('Service-Based', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-emerald-300 bg-emerald-50 text-emerald-800" data-compcat="Service-Based">
+            💼 Service-Based
+          </button>
+          <button onclick="filterCompanies('Startup', this)" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold border border-amber-300 bg-amber-50 text-amber-800" data-compcat="Startup">
+            🚀 Startups &amp; Unicorns
+          </button>
+        </div>
+
+        <!-- Product-Based Section -->
+        <div id="comp-section-product" class="space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full border border-blue-200">
+              🏢 Product-Based Companies
+            </span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="product-companies-grid"></div>
+        </div>
+
+        <!-- Service-Based Section -->
+        <div id="comp-section-service" class="space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full border border-emerald-200">
+              💼 Service-Based Companies
+            </span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="service-companies-grid"></div>
+        </div>
+
+        <!-- Startups Section -->
+        <div id="comp-section-startup" class="space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full border border-amber-200">
+              🚀 Startups &amp; Unicorns
+            </span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="startup-companies-grid"></div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         PAGE 8: FREE JOB ALERTS REGISTRATION
+    ============================================================ -->
+    <section id="page-register" class="page-view space-y-6">
+      <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm max-w-4xl mx-auto space-y-6">
+        <div class="text-center max-w-xl mx-auto">
+          <div class="inline-flex items-center gap-2 bg-emerald-100 text-emerald-800 text-xs font-extrabold px-3 py-1 rounded-full mb-2">
+            <i class="fa-solid fa-gift"></i> 100% Free Registration
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900">UdyogMitra Free Job Alerts</h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            Register your profile to receive automated email notifications whenever new job openings matching your domain and experience are published.
+          </p>
+        </div>
+
+        <form id="job-alert-form" onsubmit="handleRegistration(event)" class="space-y-4 pt-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Your Full Name *</label>
+              <input type="text" id="reg-name" required placeholder="e.g. Rahul Sharma"
+                class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-600 outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Email Address (For Direct Alerts) *</label>
+              <input type="email" id="reg-email" required placeholder="name@example.com"
+                class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-600 outline-none" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Experience Level *</label>
+              <select id="reg-exp" required class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm bg-slate-50 font-semibold focus:ring-2 focus:ring-blue-600 outline-none">
+                <option value="Fresher (0 Years)">🎓 Fresher (0 Years)</option>
+                <option value="1 Year Experience">💼 1 Year Experience</option>
+                <option value="2 Years Experience">💼 2 Years Experience</option>
+                <option value="3 Years Experience">💼 3 Years Experience</option>
+                <option value="4+ Years Experience">🚀 4+ Years Experience</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Preferred Domain *</label>
+              <select id="reg-domain" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm bg-slate-50 font-semibold focus:ring-2 focus:ring-blue-600 outline-none">
+                <option>Java &amp; Backend Development</option>
+                <option>.NET &amp; C# Development</option>
+                <option>Python &amp; Data Science</option>
+                <option>Web, Cloud &amp; DevOps</option>
+                <option>Non-IT &amp; Business Roles</option>
+                <option>All Domains</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Target Dream Role *</label>
+            <select id="reg-role" required class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm bg-slate-50 font-semibold focus:ring-2 focus:ring-blue-600 outline-none">
+              <optgroup label="Java &amp; Backend">
+                <option>Java Developer</option>
+                <option>Java Full Stack Developer</option>
+                <option>Backend Developer (Java/Spring)</option>
+                <option>Microservices Developer</option>
+              </optgroup>
+              <optgroup label=".NET &amp; C#">
+                <option>.NET Developer</option>
+                <option>C# Developer</option>
+                <option>ASP.NET Developer</option>
+                <option>Full Stack .NET Developer</option>
+              </optgroup>
+              <optgroup label="Python &amp; Data Science">
+                <option>Data Analyst</option>
+                <option>Data Scientist</option>
+                <option>Machine Learning Engineer</option>
+                <option>Data Engineer</option>
+                <option>AI / NLP Engineer</option>
+                <option>BI Developer / Power BI Specialist</option>
+              </optgroup>
+              <optgroup label="Web, Cloud &amp; Testing">
+                <option>Frontend Developer (React/Angular)</option>
+                <option>Full Stack Developer (MERN/MEAN)</option>
+                <option>Cloud Engineer (AWS/Azure/GCP)</option>
+                <option>DevOps Engineer</option>
+                <option>QA / Test Engineer</option>
+              </optgroup>
+              <optgroup label="Non-IT &amp; Corporate Roles">
+                <option>HR Executive</option>
+                <option>HR Recruiter</option>
+                <option>Finance Analyst</option>
+                <option>Accounts Executive</option>
+                <option>Operations Manager</option>
+                <option>Business Analyst</option>
+                <option>Sales Executive</option>
+                <option>Digital Marketing Executive</option>
+                <option>Customer Support Executive</option>
+                <option>Content Writer</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Your Key Skills (comma-separated)</label>
+            <input type="text" id="reg-skills" placeholder="e.g. Java, Spring Boot, SQL, AWS, Python, Excel" value="Java, Spring Boot, SQL"
+              class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-600 outline-none" />
+          </div>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+            <div>
+              <div class="font-bold text-slate-800 text-xs">🔔 Email Alert Frequency</div>
+              <div class="text-[11px] text-slate-500">Send me notifications when matching jobs are posted.</div>
+            </div>
+            <select id="reg-frequency" class="border border-slate-300 rounded-lg px-3 py-1 text-xs font-bold bg-white">
+              <option value="Instant Daily Digest">Instant Daily Digest</option>
+              <option value="Weekly Digest">Weekly Digest</option>
+            </select>
+          </div>
+
+          <button type="submit" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black py-3.5 rounded-xl shadow-lg transition text-base flex items-center justify-center gap-2">
+            <i class="fa-solid fa-paper-plane"></i> Register &amp; Dispatch My First Job Matches
+          </button>
+        </form>
+
+        <!-- Success Preview Box -->
+        <div id="registration-success-box" class="hidden bg-emerald-50 border-2 border-emerald-300 p-6 rounded-2xl space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center text-lg font-bold shrink-0">✓</div>
+            <div>
+              <h4 class="font-black text-emerald-950 text-base">Registration Successful!</h4>
+              <p class="text-xs text-emerald-800">You are registered. Dispatched initial matches to: <b id="preview-email-target"></b></p>
+            </div>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-emerald-200 text-xs space-y-2 shadow-sm">
+            <div class="font-bold text-slate-700 border-b pb-1.5">📧 Automated Email Preview</div>
+            <div id="email-preview-content" class="text-slate-600 space-y-1"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         PAGE 9: MARKET ANALYTICS
+    ============================================================ -->
+    <section id="page-analytics" class="page-view space-y-6">
+      <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+        <h2 class="text-2xl font-black text-slate-900">📊 Market Analytics &amp; Compensation Insights</h2>
+        <p class="text-xs sm:text-sm text-slate-500">Visualizing salary spreads, top roles, and geographic hiring density across India.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <h3 class="font-bold text-slate-700 text-sm mb-3">Top In-Demand Roles</h3>
+          <canvas id="chartRoles" height="200"></canvas>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <h3 class="font-bold text-slate-700 text-sm mb-3">Most Demanded Skills</h3>
+          <canvas id="chartSkills" height="200"></canvas>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <h3 class="font-bold text-slate-700 text-sm mb-3">Hiring Distribution by City</h3>
+          <canvas id="chartLocations" height="200"></canvas>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <h3 class="font-bold text-slate-700 text-sm mb-3">Average Salary by Domain (LPA)</h3>
+          <canvas id="chartSalaries" height="200"></canvas>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ============================================================
+       AUTHENTICATION MODAL (LOGIN & REGISTER)
+  ============================================================ -->
+  <div id="auth-modal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-slate-200 overflow-hidden relative animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Close Button -->
+      <button onclick="closeAuthModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Modal Tabs (Login / Register) -->
+      <div class="flex border-b border-slate-200 pt-3 px-6">
+        <button onclick="switchAuthTab('login')" id="modal-tab-login" class="flex-1 py-3 text-center text-sm font-bold text-slate-600 auth-tab-active">
+          Sign In
+        </button>
+        <button onclick="switchAuthTab('register')" id="modal-tab-register" class="flex-1 py-3 text-center text-sm font-bold text-slate-500">
+          Create Account
+        </button>
+      </div>
+
+      <div class="p-6">
+        <!-- Alert / Feedback Notification -->
+        <div id="auth-alert" class="hidden mb-4 p-3 rounded-xl text-xs font-semibold flex items-center gap-2"></div>
+
+        <!-- LOGIN FORM -->
+        <form id="auth-login-form" onsubmit="submitLoginForm(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Email or User ID *</label>
+            <div class="flex items-center gap-2 border border-slate-300 rounded-xl px-3.5 py-2.5 focus-within:ring-2 focus-within:ring-blue-500">
+              <i class="fa-solid fa-envelope text-slate-400 text-xs"></i>
+              <input type="text" id="login-email" required placeholder="name@example.com or USR_..." class="w-full text-sm outline-none bg-transparent" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Password *</label>
+            <div class="flex items-center gap-2 border border-slate-300 rounded-xl px-3.5 py-2.5 focus-within:ring-2 focus-within:ring-blue-500">
+              <i class="fa-solid fa-lock text-slate-400 text-xs"></i>
+              <input type="password" id="login-password" required placeholder="••••••••" class="w-full text-sm outline-none bg-transparent" />
+            </div>
+          </div>
+
+          
+
+          <button type="submit" id="btn-login-submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3 rounded-xl shadow-md transition text-sm flex items-center justify-center gap-2">
+            <i class="fa-solid fa-right-to-bracket"></i> Sign In to My Account
+          </button>
+        </form>
+
+        <!-- REGISTER FORM -->
+        <form id="auth-register-form" onsubmit="submitRegisterForm(event)" class="space-y-3.5 hidden">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Full Name *</label>
+            <input type="text" id="reg-auth-name" required placeholder="e.g. Rahul Sharma" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Email Address *</label>
+            <input type="email" id="reg-auth-email" required placeholder="name@example.com" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Mobile Number (Optional)</label>
+            <input type="tel" id="reg-auth-mobile" placeholder="+91 9876543210" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Password *</label>
+              <input type="password" id="reg-auth-password" required minlength="6" placeholder="Min 6 chars" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Confirm *</label>
+              <input type="password" id="reg-auth-confirm" required minlength="6" placeholder="Re-enter" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+          </div>
+
+          <button type="submit" id="btn-register-submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold py-3 rounded-xl shadow-md transition text-sm flex items-center justify-center gap-2 mt-2">
+            <i class="fa-solid fa-user-plus"></i> Create Secure Account
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+
+  
+  <!-- APPLICATION CONFIRMATION MODAL -->
+  <div id="application-confirmation-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 text-center shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200">
+      <div class="w-16 h-16 mx-auto mb-4 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl shadow-inner">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-black px-3.5 py-1 rounded-full mb-2">Application Verified &amp; Recorded</span>
+      <h3 class="text-xl font-black text-slate-900 mb-1" id="app-confirm-title">Application Submitted Successfully!</h3>
+      <p class="text-xs text-slate-600 leading-relaxed mb-4" id="app-confirm-message">
+        Your application for <b id="app-confirm-role">Software Engineer</b> at <b id="app-confirm-company">Company</b> has been registered in your isolated profile.
+      </p>
+      
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 mb-5 text-left text-xs space-y-2">
+        <div class="flex justify-between items-center"><span class="text-slate-500">Application ID:</span> <b class="text-slate-800 font-mono" id="app-confirm-id">APP_123</b></div>
+        <div class="flex justify-between items-center"><span class="text-slate-500">Candidate:</span> <b class="text-slate-800" id="app-confirm-user">Candidate Name</b></div>
+        <div class="flex justify-between items-center"><span class="text-slate-500">Confirmation Sent To:</span> <b class="text-blue-600 font-semibold" id="app-confirm-email">user@email.com</b></div>
+        <div class="flex justify-between items-center border-t border-slate-200/80 pt-1.5"><span class="text-slate-500">Updated Total Applied:</span> <b class="text-emerald-600 font-black text-sm" id="app-confirm-count">1</b></div>
+        <div class="flex justify-between items-center"><span class="text-slate-500">Employer Portal:</span> <span class="text-emerald-700 font-bold">Opened in new tab ↗</span></div>
+      </div>
+
+      <div class="flex gap-2.5">
+        <button onclick="closeAppConfirmModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition">
+          Continue Browsing
+        </button>
+        <button onclick="closeAppConfirmModal(); navigateToPage('dashboard')" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-chart-line"></i> View Dashboard
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comprehensive Footer -->
+  <footer class="bg-slate-950 text-slate-400 text-xs py-10 border-t border-slate-800 mt-12">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+      <div>
+        <div class="flex items-center space-x-2 text-white font-bold text-base mb-1">
+          <i class="fa-solid fa-briefcase text-blue-500"></i>
+          <span>UdyogMitra • Career Portal</span>
+        </div>
+        <p class="text-[11px] text-slate-400 leading-relaxed">
+          A full-scale portal connecting candidates directly to official career pages of Product-Based, Service-Based, and Startup companies across Java, .NET, Python, Web &amp; Non-IT roles.
+        </p>
+      </div>
+      <div class="text-center border-y md:border-y-0 md:border-x border-slate-800 py-3 md:py-0">
+        <p class="text-slate-300 font-semibold text-xs">🚀 Developed by <span class="text-blue-400 font-bold">Nallani Jaswanth</span></p>
+        <p class="text-[11px] text-slate-400 mt-0.5">Data Analytics &amp; Full-Stack Portfolio Showcase</p>
+        <p class="text-[11px] text-slate-500">Includes Multi-User Authentication &amp; Isolated Dashboard</p>
+      </div>
+      <div class="text-left md:text-right space-y-1">
+        <p class="text-slate-300 font-medium">© 2026 Nallani Jaswanth. All Rights Reserved.</p>
+        <p class="text-[11px] text-slate-500">Powered by Python, Pandas, Netlify &amp; Direct Career Gateways.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+
+</div><!-- /main-app-container -->
+</body>
+</html>
